@@ -63,6 +63,13 @@ fun ToDoList(
             .fillMaxWidth()
             .padding(5.dp)
     ) {
+        Row (modifier = Modifier.padding(start = 20.dp)){
+            Text(
+                text = "最終更新日：" + item.time,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.DarkGray
+            )
+        }
         Row(modifier= modifier.fillMaxWidth()) {
             Text(
                 text = item.title,
@@ -70,12 +77,6 @@ fun ToDoList(
                 modifier = modifier
                     .padding(start = 10.dp)
                     .align(Alignment.CenterVertically)
-            )
-            Spacer(modifier = modifier.padding(horizontal = 20.dp))
-            Text(
-                text = "最終更新日：" + item.time,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.DarkGray
             )
             Spacer(modifier = modifier.weight(1f))
 

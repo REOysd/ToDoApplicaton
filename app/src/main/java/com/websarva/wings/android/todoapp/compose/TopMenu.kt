@@ -30,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +41,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.websarva.wings.android.todoapp.R
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun TopMenu(
@@ -74,6 +77,7 @@ fun TopMenu(
                     TemplateList = toDoTemplateListState.value.templatesList,
                     TemplateViewModel = TemplateViewModel,
                     onClickAddButtonToTemplate = onClickAddButtonToTemplate,
+                    viewModel = viewModel,
                 )
                 Row(modifier = modifier
                     .align(Alignment.TopCenter)
@@ -100,7 +104,6 @@ fun TopMenu(
                         .padding(bottom = 100.dp, end = 50.dp)
                 ) {
                     ClickButton(onClick = {onClickAddButton()}, viewModel = viewModel)
-                    Text(text = formattedTimer)
                 }
             }
         }
@@ -120,7 +123,7 @@ fun ClickButton(
         onClick = {
             isPressed = true
             onClick()
-            viewModel.clearItem()
+            viewModel.clearItem(viewModel.settingTemplate)
             viewModel.changeSaveToUpdate = true
                   },
         modifier = Modifier
@@ -143,25 +146,45 @@ fun ClickButton(
 @Composable
 fun TopAppBar_screen(
     onClickBackNavigation: () -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: toDoViewModel,
     time: String
 ){
+    val scope = rememberCoroutineScope()
+    var enable by remember { mutableStateOf(true) }
+
     TopAppBar(
         title = {},
         modifier = Modifier.background(Color.Blue),
         navigationIcon = {
-            IconButton(onClick = {
+            IconButton(
+                onClick = {
                 onClickBackNavigation()
-            }) {
+                viewModel.settingTemplate = false
+                scope.launch {
+                        enable = false
+                        delay(3000)
+                        enable = true
+                }
+            },
+                enabled = enable
+            ) {
                 Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
             }
         },
         actions = {
-            IconButton(onClick = {
+            IconButton(
+                onClick = {
                 onClickBackNavigation()
+                viewModel.settingTemplate = false
                 viewModel.ChangeToUpdated(viewModel.changeSaveToUpdate,time = time)
-            }) {
+                    scope.launch {
+                        enable = false
+                        delay(3000)
+                        enable = true
+                    }
+            },
+                enabled = enable
+            ) {
                 Icon(imageVector = Icons.Filled.Done, contentDescription = "Share")
             }
         }

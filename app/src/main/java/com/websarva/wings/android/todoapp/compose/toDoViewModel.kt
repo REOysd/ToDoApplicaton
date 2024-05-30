@@ -27,12 +27,13 @@ import java.util.Date
 class toDoViewModel:ViewModel() {
     var title by mutableStateOf("")
     var description by mutableStateOf("")
+    var settingTemplate by mutableStateOf(false)
     var changeSaveToUpdate by mutableStateOf(false)
     var changeNormalToSorted by mutableStateOf(true)
     private val _data = MutableStateFlow(System.currentTimeMillis())
     val data:StateFlow<Long> = _data.asStateFlow()
     val formattedTimer:StateFlow<String> = data.map {data ->
-        val formatter = SimpleDateFormat("MM/dd:HH:mm:ss")
+        val formatter = SimpleDateFormat("MM/dd:HH:mm")
         formatter.format(data)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(),"")
     var settingData:toDoEntity? = null
@@ -60,9 +61,11 @@ class toDoViewModel:ViewModel() {
             initialValue = ToDoListState(emptyList())
         )
 
-    fun clearItem(){
-        title = ""
-        description = ""
+    fun clearItem(boolean: Boolean){
+        if(!boolean){
+            title = ""
+            description = ""
+        }
     }
 
     fun insertToDoItem(toDoItem:toDoEntity) = viewModelScope.launch {

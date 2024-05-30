@@ -1,6 +1,10 @@
 package com.websarva.wings.android.todoapp.compose
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,21 +24,32 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.websarva.wings.android.todoapp.R
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun ToDoTemplateMenu(
     viewModel: ToDoTemplateViewModel,
     onClickBackNavigation:() -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
         Scaffold(
             topBar = {
                 TopAppBarOnTemplate(
@@ -42,13 +57,18 @@ fun ToDoTemplateMenu(
                     modifier = Modifier.padding(bottom = 20.dp),
                     viewModel = viewModel
                 )
+            },
+            modifier = Modifier.pointerInput(Unit){
+                detectTapGestures (
+                    onTap = {focusManager.clearFocus()}
+                )
             }
+
         ) { innerPadding ->
             Box(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-
                 Row(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
@@ -63,10 +83,8 @@ fun ToDoTemplateMenu(
                         shape = RoundedCornerShape(10.dp),
                         textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
                         modifier = Modifier
-                            .fillMaxWidth(),
-
+                            .fillMaxWidth()
                         )
-
                 }
 
                 Row(
@@ -108,13 +126,24 @@ fun TopAppBarOnTemplate(
     modifier: Modifier = Modifier,
     viewModel: ToDoTemplateViewModel,
 ){
+    val scope = rememberCoroutineScope()
+    var enable by remember { mutableStateOf(true) }
+
     TopAppBar(
         title = {},
         modifier = Modifier.background(Color.Blue),
         navigationIcon = {
-            IconButton(onClick = {
+            IconButton(
+                onClick = {
                 onClickBackNavigation()
-            }) {
+                    scope.launch {
+                        enable = false
+                        delay(3000)
+                        enable = true
+                    }
+            },
+                enabled = enable
+            ) {
                 Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
             }
         },
@@ -122,6 +151,11 @@ fun TopAppBarOnTemplate(
             IconButton(onClick = {
                 onClickBackNavigation()
                 viewModel.ChangeToUpdatedOnTemplate(viewModel.changeSaveToUpdate)
+                scope.launch {
+                    enable = false
+                    delay(3000)
+                    enable = true
+                }
             }) {
                 Icon(imageVector = Icons.Filled.Done, contentDescription = "Share")
             }

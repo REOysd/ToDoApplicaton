@@ -1,5 +1,6 @@
 package com.websarva.wings.android.todoapp.compose
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,15 +31,22 @@ fun ToDoMenu(
     viewModel: toDoViewModel,
     onClickBackNavigation:() -> Unit,
     ) {
+    val focusManager = LocalFocusManager.current
 
     viewModel.formattedTimer.collectAsState().value.let{formattedTimer ->
         Scaffold(
             topBar = {
                 TopAppBar_screen(
                     onClickBackNavigation = onClickBackNavigation,
-                    modifier = Modifier.padding(bottom = 20.dp),
                     time = formattedTimer,
                     viewModel = viewModel
+                )
+            },
+            modifier = Modifier.pointerInput(Unit){
+                detectTapGestures(
+                    onTap = {
+                        focusManager.clearFocus()
+                    }
                 )
             }
         ) { innerPadding ->

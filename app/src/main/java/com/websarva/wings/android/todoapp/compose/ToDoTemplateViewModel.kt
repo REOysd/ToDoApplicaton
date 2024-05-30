@@ -19,6 +19,7 @@ class ToDoTemplateViewModel:ViewModel() {
     var title by mutableStateOf("")
     var description by mutableStateOf("")
     var changeSaveToUpdate by mutableStateOf(true)
+    var settingData:createTemplate? = null
 
     val toDoTemplateListState: StateFlow<ToDoTemplateListState> = ToDoApplication.database.ToDoDao().getAllTemplate().map {
         ToDoTemplateListState(it)
@@ -33,6 +34,7 @@ class ToDoTemplateViewModel:ViewModel() {
     }
 
     fun updateToDoItemTemplate(template: createTemplate) = viewModelScope.launch {
+        ToDoApplication.database.ToDoDao().updateTemplate(template)
     }
 
     fun deleteToDoTemplate(template: createTemplate) = viewModelScope.launch {
@@ -44,11 +46,11 @@ class ToDoTemplateViewModel:ViewModel() {
             insertToDoTemplate(
                 createTemplate(TemplateTitle = title, TemplateText = description)
             )
-//        }else{
-//            settingData?.let {
-//                updateToDoItemTemplate(toDoEntity(it.id,title,description,time))
-//                Log.d("tag","updateToDo")
-//            }
+        }else{
+            settingData?.let {
+                updateToDoItemTemplate(createTemplate(it.id,title,description))
+                Log.d("tag","updateToDo")
+            }
         }
     }
 }

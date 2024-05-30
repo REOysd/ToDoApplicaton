@@ -59,7 +59,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun ChipsList(
     TemplateList:List<createTemplate>,
-    onClickDeleteButtonOnTemplate: (createTemplate) -> Unit
+    onClickDeleteButtonOnTemplate: (createTemplate) -> Unit,
+    onLongClick: (createTemplate) -> Unit,
+    viewModel: toDoViewModel,
 ){
     var selectedItemId by remember { mutableStateOf<Int?>(null) }
 
@@ -72,10 +74,15 @@ fun ChipsList(
                 onClick = {
                     if (selectedItemId == TemplateItems.id){
                         selectedItemId = null
+                        viewModel.description = ""
+                        viewModel.settingTemplate = false
                     }else{
                         selectedItemId = TemplateItems.id
+                        viewModel.description = TemplateItems.TemplateText
+                        viewModel.settingTemplate = true
                     }
-                }
+                },
+                onLongClick = onLongClick
             )
         }
     }
@@ -87,7 +94,8 @@ fun TemplateCard(
     TemplateItems:createTemplate,
     onClickDeleteButtonOnTemplate:(createTemplate) -> Unit,
     changeCheck:Boolean,
-    onClick:() -> Unit
+    onClick:() -> Unit,
+    onLongClick:(createTemplate) ->Unit,
 ) {
     Card(
         modifier = Modifier
@@ -106,7 +114,10 @@ fun TemplateCard(
                         onClick()
                         Log.d("tab", "click")
                     },
-                    onLongClick = { Log.d("tab", "onLongClick") }
+                    onLongClick = {
+                        onLongClick(TemplateItems)
+                        Log.d("tab", "onLongClick")
+                    }
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -145,11 +156,12 @@ fun TemplateCard(
 fun ModalBottomSheetSample(
     TemplateList: List<createTemplate>,
     TemplateViewModel:ToDoTemplateViewModel,
+    viewModel: toDoViewModel,
     onClickAddButtonToTemplate:() -> Unit,
     modifier: Modifier = Modifier
 ) {
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
+    // val scope = rememberCoroutineScope()
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
     )
@@ -176,26 +188,33 @@ fun ModalBottomSheetSample(
             onDismissRequest = { openBottomSheet = false },
             sheetState = bottomSheetState,
         ) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Button(
-                    // Note: If you provide logic outside of onDismissRequest to remove the sheet,
-                    // you must additionally handle intended state cleanup, if any.
-                    onClick = {
-                        scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
-                            if (!bottomSheetState.isVisible) {
-                                openBottomSheet = false
-                            }
-                        }
-                    }
-                ) {
-                    Text("Hide Bottom Sheet")
-                }
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+//                Button(
+//                    // Note: If you provide logic outside of onDismissRequest to remove the sheet,
+//                    // you must additionally handle intended state cleanup, if any.
+//                    onClick = {
+//                        scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
+//                            if (!bottomSheetState.isVisible) {
+//                                openBottomSheet = false
+//                            }
+//                        }
+//                    }
+//                ) {
+//                    Text("Hide Bottom Sheet")
+//                }
 
                 Button(onClick = {
                     onClickAddButtonToTemplate()
                     TemplateViewModel.title = ""
                     TemplateViewModel.description = ""
-                }) {
+                },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 20.dp, end = 20.dp)
+                ) {
                     Text(text = "createTemplate")
                 }
             }
@@ -203,10 +222,16 @@ fun ModalBottomSheetSample(
             Spacer(modifier = Modifier.padding(10.dp))
             ChipsList(
                 TemplateList = TemplateList,
-                onClickDeleteButtonOnTemplate = {TemplateViewModel.deleteToDoTemplate(it)}
+                onClickDeleteButtonOnTemplate = {TemplateViewModel.deleteToDoTemplate(it)},
+                onLongClick = {
+                    TemplateViewModel.settingData = it
+                    TemplateViewModel.title = it.TemplateTitle
+                    TemplateViewModel.description = it.TemplateText
+                    onClickAddButtonToTemplate()
+                    TemplateViewModel.changeSaveToUpdate = false
+                },
+                viewModel = viewModel
             )
-            
-            Text(text = "string")
         }
     }
 }
@@ -222,7 +247,8 @@ fun FiltersChipPreview(){
             TemplateText = "text"),
         onClickDeleteButtonOnTemplate = {},
         changeCheck = false,
-        onClick = {}
+        onClick = {},
+        onLongClick = {}
     )
 }
 
