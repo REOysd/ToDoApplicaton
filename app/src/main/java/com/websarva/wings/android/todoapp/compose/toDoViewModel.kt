@@ -27,7 +27,7 @@ import java.util.Date
 class toDoViewModel:ViewModel() {
     var title by mutableStateOf("")
     var description by mutableStateOf("")
-    var settingTemplate by mutableStateOf(false)
+    var settingTemplate by mutableStateOf(true)
     var changeSaveToUpdate by mutableStateOf(false)
     var changeNormalToSorted by mutableStateOf(true)
     private val _data = MutableStateFlow(System.currentTimeMillis())
@@ -62,9 +62,11 @@ class toDoViewModel:ViewModel() {
         )
 
     fun clearItem(boolean: Boolean){
-        if(!boolean){
+        if(boolean){
             title = ""
             description = ""
+        }else{
+            title = ""
         }
     }
 

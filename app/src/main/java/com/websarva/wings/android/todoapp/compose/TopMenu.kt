@@ -124,6 +124,7 @@ fun ClickButton(
             isPressed = true
             onClick()
             viewModel.clearItem(viewModel.settingTemplate)
+            Log.d("tag",viewModel.settingTemplate.toString())
             viewModel.changeSaveToUpdate = true
                   },
         modifier = Modifier
@@ -159,7 +160,7 @@ fun TopAppBar_screen(
             IconButton(
                 onClick = {
                 onClickBackNavigation()
-                viewModel.settingTemplate = false
+                viewModel.settingTemplate = true
                 scope.launch {
                         enable = false
                         delay(3000)
@@ -175,7 +176,7 @@ fun TopAppBar_screen(
             IconButton(
                 onClick = {
                 onClickBackNavigation()
-                viewModel.settingTemplate = false
+                viewModel.settingTemplate = true
                 viewModel.ChangeToUpdated(viewModel.changeSaveToUpdate,time = time)
                     scope.launch {
                         enable = false

@@ -74,12 +74,11 @@ fun ChipsList(
                 onClick = {
                     if (selectedItemId == TemplateItems.id){
                         selectedItemId = null
-                        viewModel.description = ""
-                        viewModel.settingTemplate = false
+                        viewModel.settingTemplate = true
                     }else{
                         selectedItemId = TemplateItems.id
                         viewModel.description = TemplateItems.TemplateText
-                        viewModel.settingTemplate = true
+                        viewModel.settingTemplate = false
                     }
                 },
                 onLongClick = onLongClick
@@ -208,6 +207,7 @@ fun ModalBottomSheetSample(
 
                 Button(onClick = {
                     onClickAddButtonToTemplate()
+                    TemplateViewModel.changeSaveToUpdate = true
                     TemplateViewModel.title = ""
                     TemplateViewModel.description = ""
                 },
