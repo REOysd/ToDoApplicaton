@@ -30,6 +30,7 @@ import com.websarva.wings.android.todoapp.R
 fun ToDoMenu(
     viewModel: toDoViewModel,
     onClickBackNavigation:() -> Unit,
+    modifier: Modifier
     ) {
     val focusManager = LocalFocusManager.current
 
@@ -51,7 +52,7 @@ fun ToDoMenu(
             }
         ) { innerPadding ->
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxSize()
             ) {
 
@@ -115,6 +116,7 @@ fun ToDoMenu(
 fun ToDoMenuPreview(){
     ToDoMenu(
         viewModel = toDoViewModel(),
-        onClickBackNavigation = {}
+        onClickBackNavigation = {},
+        modifier = Modifier
     )
 }

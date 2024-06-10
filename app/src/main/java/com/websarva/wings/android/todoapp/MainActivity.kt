@@ -1,6 +1,7 @@
 package com.websarva.wings.android.todoapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.ai.client.generativeai.BuildConfig
 import com.websarva.wings.android.todoapp.compose.ToDoTemplateViewModel
 import com.websarva.wings.android.todoapp.compose.TopMenu
 import com.websarva.wings.android.todoapp.compose.toDoViewModel

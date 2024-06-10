@@ -2,6 +2,7 @@ package com.websarva.wings.android.todoapp.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,6 +37,7 @@ fun ToDoNavHost(
             ToDoMenu(
                 viewModel = viewModel,
                 onClickBackNavigation = {navController.popBackStack()},
+                modifier = Modifier
             )
         }
         composable(NavigationScreen.AddTemplateMenu.name){

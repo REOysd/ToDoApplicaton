@@ -32,8 +32,9 @@ class toDoViewModel:ViewModel() {
     var changeNormalToSorted by mutableStateOf(true)
     private val _data = MutableStateFlow(System.currentTimeMillis())
     val data:StateFlow<Long> = _data.asStateFlow()
+    val formatter = SimpleDateFormat("MM/dd:HH:mm")
     val formattedTimer:StateFlow<String> = data.map {data ->
-        val formatter = SimpleDateFormat("MM/dd:HH:mm")
+
         formatter.format(data)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(),"")
     var settingData:toDoEntity? = null
