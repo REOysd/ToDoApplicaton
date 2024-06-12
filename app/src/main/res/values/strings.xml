@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ToDoApp</string>
+    <string name="toDo_title">タイトル</string>
+    <string name="createTemplate_title">テンプレートのタイトル</string>
+    <string name="createTemplate_Text">テンプレートのテキスト</string>
+    <string name="toDo_description">やること</string>
+    <string name="toDO_Home">HomeScreen</string>
+    <string name="toDo_AddMenu">AddScreen</string>
+    <string name="NormalSortedOnTopMenu">新しい順</string>
+    <string name="ReverseSortedOnTopMenu">更新日順</string>
+    <string name="labelOnTextField">質問を記入</string>
+</resources>
